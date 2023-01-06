@@ -26,5 +26,5 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::get('user', 'getAuthenticatedUser')->middleware('auth:sanctum')->name('auth.user');
 
     Route::post('/password/email', 'sendPasswordResetLinkEmail')->middleware('throttle:5,1')->name('password.email');
-    Route::post('/password/reset', 'AuthController@resetPassword')->name('password.reset');
+    Route::post('/password/reset', 'resetPassword')->name('password.reset');
 });
