@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\CarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,5 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('/password/email', 'sendPasswordResetLinkEmail')->middleware('throttle:5,1')->name('password.email');
     Route::post('/password/reset', 'resetPassword')->name('password.reset');
 });
+
+Route::apiResource('/cars', CarController::class);
