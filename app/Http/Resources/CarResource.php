@@ -21,8 +21,8 @@ class CarResource extends JsonResource
             'horsepower' => $this->horsepower,
             'mileage' => $this->mileage,
             'price' => $this->price,
-            'image' => [
-                'link' => $this->image ? $this->image : 'Link not found'
+            'links' => [
+                'image' => $this->image ? $this->image : 'image not found'
             ]
         ];
     }
