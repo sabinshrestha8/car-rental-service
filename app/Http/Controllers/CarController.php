@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use Illuminate\Support\Str;
 use App\Http\Resources\CarResource;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
@@ -13,6 +14,18 @@ class CarController extends Controller
     public function store(StoreCarRequest $request)
     {
         $validatedStoreCar = $request->validated();
+
+        $fileTemp = $request->file('image');
+        if ($fileTemp->isValid()) {
+            $fileExtension = $fileTemp->getClientOriginalExtension();
+            $fileName = Str::random(4) . '.' . $fileExtension;
+            $path = $fileTemp->storeAs(
+                'public/images',
+                $fileName
+            );
+        }
+
+        $validatedStoreCar['image'] = $path;
 
         $createdCar = Car::create($validatedStoreCar);
 
