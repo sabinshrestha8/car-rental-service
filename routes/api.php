@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\API\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,8 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('/password/reset', 'resetPassword')->name('password.reset');
 });
 
-Route::apiResource('/cars', CarController::class);
+Route::apiResource('/cars', CarController::class)->middleware('auth:sanctum');
+
+Route::get('/search', [CarController::class, 'searchCar']);
+
+// Route::post('/bookings', [BookingController::class, 'bookCar'])->middleware('auth:sanctum');

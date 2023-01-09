@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Resources\CarResource;
 use App\Http\Requests\StoreCarRequest;
@@ -25,7 +27,7 @@ class CarController extends Controller
             );
         }
 
-        $validatedStoreCar['image'] = $path;
+        $validatedStoreCar['image'] = url(Storage::url($path));
 
         $createdCar = Car::create($validatedStoreCar);
 
@@ -48,6 +50,18 @@ class CarController extends Controller
     {
         $validatedUpdateCar = $request->validated();
 
+        $fileTemp = $request->file('image');
+        if ($fileTemp->isValid()) {
+            $fileExtension = $fileTemp->getClientOriginalExtension();
+            $fileName = Str::random(4) . '.' . $fileExtension;
+            $path = $fileTemp->storeAs(
+                'images',
+                $fileName
+            );
+        }
+
+        $validatedUpdateCar['image'] = url(Storage::url($path));
+
         $car->update($validatedUpdateCar);
 
         return response([
@@ -59,5 +73,18 @@ class CarController extends Controller
     {
         $car->delete();
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function searchCar(Request $request) {
+        $search = $request->input('name');
+
+        $searchedCars = Car::Where('name', 'LIKE', "%{$search}%")
+                ->orWhere('mileage', 'LIKE', "%{$search}%")
+                ->orWhere('horsepower', 'LIKE', "%{$search}%")
+                ->get();
+
+        return response([
+            'cars' => CarResource::collection($searchedCars)
+        ]);
     }
 }
