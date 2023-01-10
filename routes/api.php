@@ -35,4 +35,6 @@ Route::apiResource('/cars', CarController::class)->middleware('auth:sanctum');
 
 Route::get('/search', [CarController::class, 'searchCar']);
 
-// Route::post('/bookings', [BookingController::class, 'bookCar'])->middleware('auth:sanctum');
+Route::post('/bookings', [BookingController::class, 'bookCar'])->middleware('auth:sanctum');
+
+// Route::get('/price-per-hour', [BookingController::class, 'bookingHour']);
