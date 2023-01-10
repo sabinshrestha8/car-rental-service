@@ -51,16 +51,22 @@ class CarController extends Controller
         $validatedUpdateCar = $request->validated();
 
         $fileTemp = $request->file('image');
-        if ($fileTemp->isValid()) {
+        if (!empty($fileTemp)) {
             $fileExtension = $fileTemp->getClientOriginalExtension();
             $fileName = Str::random(4) . '.' . $fileExtension;
             $path = $fileTemp->storeAs(
-                'images',
+                'public/images',
                 $fileName
             );
-        }
 
-        $validatedUpdateCar['image'] = url(Storage::url($path));
+            $validatedUpdateCar['image'] = url(Storage::url($path));
+
+            $car->update($validatedUpdateCar);
+
+            return response([
+                'car' => new CarResource($car)
+            ]);
+        }
 
         $car->update($validatedUpdateCar);
 
@@ -75,7 +81,8 @@ class CarController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function searchCar(Request $request) {
+    public function searchCar(Request $request)
+    {
         $search = $request->input('name');
 
         $searchedCars = Car::Where('name', 'LIKE', "%{$search}%")
