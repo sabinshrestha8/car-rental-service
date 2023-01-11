@@ -31,10 +31,20 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('/password/reset', 'resetPassword')->name('password.reset');
 });
 
-Route::apiResource('/cars', CarController::class)->middleware('auth:sanctum');
+Route::apiResource('/cars', CarController::class)->middleware(['auth:sanctum', 'role:Admin']);
 
 Route::get('/search', [CarController::class, 'searchCar']);
 
-Route::post('/bookings', [BookingController::class, 'bookCar'])->middleware('auth:sanctum');
+Route::controller(BookingController::class)->prefix('bookings')->middleware(['auth:sanctum', 'role:User'])->group(function () {
+    Route::post('/', 'bookCar');
 
-// Route::get('/price-per-hour', [BookingController::class, 'bookingHour']);
+    Route::post('/{id}', 'cancelBooking');
+
+    Route::put('/{id}', 'updateBooking');
+});
+
+// Route::post('/bookings', [BookingController::class, 'bookCar'])->middleware('auth:sanctum');
+
+// Route::post('/bookings/{id}', [BookingController::class, 'cancelBooking'])->middleware('auth:sanctum');
+
+// Route::put('bookings/{id}', [BookingController::class, 'updateBooking'])->middleware('auth:sanctum');
