@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ReviewController;
+use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +50,9 @@ Route::controller(BookingController::class)->prefix('bookings')->middleware('aut
 // Route::post('/bookings/{id}', [BookingController::class, 'cancelBooking'])->middleware('auth:sanctum');
 
 // Route::put('bookings/{id}', [BookingController::class, 'updateBooking'])->middleware('auth:sanctum');
+
+// Route::post('/cars/{car}/reviews', [ReviewController::class, 'store'])->middleware('auth:sanctum');
+
+Route::group(['prefix'=>'cars', 'middleware' => ['auth:sanctum']], function () {
+    Route::apiResource('/{car}/reviews', ReviewController::class);
+});
