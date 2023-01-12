@@ -31,11 +31,11 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
     Route::post('/password/reset', 'resetPassword')->name('password.reset');
 });
 
-Route::apiResource('/cars', CarController::class)->middleware(['auth:sanctum', 'role:Admin']);
+Route::apiResource('/cars', CarController::class)->middleware('auth:sanctum');
 
 Route::get('/search', [CarController::class, 'searchCar']);
 
-Route::controller(BookingController::class)->prefix('bookings')->middleware(['auth:sanctum', 'role:User'])->group(function () {
+Route::controller(BookingController::class)->prefix('bookings')->middleware('auth:sanctum')->group(function () {
     Route::post('/', 'bookCar');
 
     Route::post('/{id}', 'cancelBooking');
