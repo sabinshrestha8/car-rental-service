@@ -23,8 +23,8 @@ return new class extends Migration {
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->boolean('status')->default(false);
-            $table->timestamp('booked_from');
-            $table->timestamp('booked_to');
+            $table->datetime('booked_from');
+            $table->datetime('booked_to');
             $table->double('total_price');
             $table->timestamps();
         });
