@@ -85,7 +85,7 @@ class BookingController extends Controller
     {
         $validatedUpdateBooking = $request->validated();
 
-        if(empty(Booking::where('id', $request->id))) {
+        if(empty(Booking::where('id', $request->id)->first())) {
             return response([
                 'message' => 'Booking with id: ' . $request->id . ' couldn\'t be found'
             ], Response::HTTP_BAD_REQUEST);
