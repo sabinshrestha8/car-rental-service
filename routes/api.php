@@ -43,6 +43,8 @@ Route::controller(BookingController::class)->prefix('bookings')->middleware('aut
     Route::post('/{id}', 'cancelBooking');
 
     Route::put('/{id}', 'updateBooking');
+
+    Route::get('/', 'showBookings');
 });
 
 // Route::post('/bookings', [BookingController::class, 'bookCar'])->middleware('auth:sanctum');
