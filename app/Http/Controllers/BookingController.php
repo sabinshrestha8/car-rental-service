@@ -7,12 +7,8 @@ use App\Http\Requests\UpdateBookCarRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\Car;
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use PhpParser\Node\Expr\Cast\Bool_;
 use Symfony\Component\HttpFoundation\Response;
-use TheSeer\Tokenizer\Exception;
 
 class BookingController extends Controller
 {

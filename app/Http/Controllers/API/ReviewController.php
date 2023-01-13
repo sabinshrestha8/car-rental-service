@@ -29,6 +29,13 @@ class ReviewController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    public function index(Car $car)
+    {
+        return response([
+            'reviews' => ReviewResource::collection($car->reviews)
+        ]);
+    }
+
     public function update(StoreReviewRequest $request, Car $car, Review $review)
     {
         $validatedStoreReview = $request->validated();
@@ -37,12 +44,12 @@ class ReviewController extends Controller
 
         return response([
             'review' => new ReviewResource($review)
-        ],Response::HTTP_CREATED);
+        ], Response::HTTP_CREATED);
     }
 
     public function destroy(Car $car, Review $review)
     {
         $review->delete();
-        return response(null,Response::HTTP_NO_CONTENT);
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

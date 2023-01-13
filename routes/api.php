@@ -47,14 +47,6 @@ Route::controller(BookingController::class)->prefix('bookings')->middleware('aut
     Route::get('/', 'showBookings');
 });
 
-// Route::post('/bookings', [BookingController::class, 'bookCar'])->middleware('auth:sanctum');
-
-// Route::post('/bookings/{id}', [BookingController::class, 'cancelBooking'])->middleware('auth:sanctum');
-
-// Route::put('bookings/{id}', [BookingController::class, 'updateBooking'])->middleware('auth:sanctum');
-
-// Route::post('/cars/{car}/reviews', [ReviewController::class, 'store'])->middleware('auth:sanctum');
-
 Route::group(['prefix'=>'cars', 'middleware' => ['auth:sanctum']], function () {
     Route::apiResource('/{car}/reviews', ReviewController::class);
 });
