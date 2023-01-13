@@ -67,10 +67,10 @@ class BookingController extends Controller
             ], Response::HTTP_BAD_REQUEST); 
         }
 
-        $bookings = auth()->user()->booking->first();
+        $bookings = auth()->user()->booking->all();
 
         return response([
-            'bookings' => new BookingResource($bookings)
+            'bookings' => BookingResource::collection($bookings)
         ]);
     }
 
@@ -84,6 +84,12 @@ class BookingController extends Controller
     public function updateBooking(UpdateBookCarRequest $request)
     {
         $validatedUpdateBooking = $request->validated();
+
+        if(empty(Booking::where('id', $request->id))) {
+            return response([
+                'message' => 'Booking with id: ' . $request->id . ' couldn\'t be found'
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         $booking = Booking::where('id', $request->id)->first();
 
