@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateBookCarRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\Car;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\Cast\Bool_;
@@ -60,7 +61,13 @@ class BookingController extends Controller
 
     public function showBookings()
     {
-        $bookings = Booking::where('id', auth()->user()->id)->first();
+        if (empty(auth()->user()->booking)) {
+            return response([
+                'message' => 'No bookings yet'
+            ], Response::HTTP_BAD_REQUEST); 
+        }
+
+        $bookings = auth()->user()->booking->first();
 
         return response([
             'bookings' => new BookingResource($bookings)
