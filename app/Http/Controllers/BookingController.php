@@ -60,10 +60,17 @@ class BookingController extends Controller
         if (empty(auth()->user()->booking)) {
             return response([
                 'message' => 'No bookings yet'
-            ], Response::HTTP_BAD_REQUEST); 
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        $bookings = auth()->user()->booking->all();
+        $bookings = auth()->user()->booking->where('id', auth()->user()->id)->get();
+        // dd($bookings);
+
+        if (!empty($bookings)) {
+            return response([
+                'bookings' => BookingResource::collection($bookings)
+            ]);
+        }
 
         return response([
             'bookings' => BookingResource::collection($bookings)
@@ -81,7 +88,13 @@ class BookingController extends Controller
     {
         $validatedUpdateBooking = $request->validated();
 
-        if(empty(Booking::where('id', $request->id)->first())) {
+        $bookedFrom = strtotime($validatedUpdateBooking['booked_from']);
+
+        $bookedTo = strtotime($validatedUpdateBooking['booked_to']);
+
+        $bookingHour = ($bookedTo - $bookedFrom) / 3600;
+
+        if (empty(Booking::where('id', $request->id)->first())) {
             return response([
                 'message' => 'Booking with id: ' . $request->id . ' couldn\'t be found'
             ], Response::HTTP_BAD_REQUEST);
@@ -89,7 +102,14 @@ class BookingController extends Controller
 
         $booking = Booking::where('id', $request->id)->first();
 
-        $booking->update($validatedUpdateBooking);
+        $car = Car::find($validatedUpdateBooking['car_id']);
+
+        $validatedUpdateBookingResult = [
+            ...$validatedUpdateBooking,
+            'total_price' => $bookingHour * $car->price
+        ];
+
+        $booking->update($validatedUpdateBookingResult);
 
         return response([
             'booking' => new BookingResource($booking)
