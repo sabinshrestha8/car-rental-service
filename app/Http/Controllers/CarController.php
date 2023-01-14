@@ -13,6 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CarController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:Admin')->except(['index', 'searchCar']);
+    }
+
     public function store(StoreCarRequest $request)
     {
         $validatedStoreCar = $request->validated();
