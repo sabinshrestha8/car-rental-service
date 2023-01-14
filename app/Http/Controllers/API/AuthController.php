@@ -79,6 +79,21 @@ class AuthController extends Controller
         return $request->user();
     }
 
+    public function updateProfile(Request $request) {
+        $validatedupdateProfile = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+        ]);
+
+        $authenticatedUser = $request->user();
+
+        $authenticatedUser->update($validatedupdateProfile);
+
+        return response([
+            'user' => $authenticatedUser
+        ]);
+    }
+
     public function sendPasswordResetLinkEmail(Request $request)
     {
         $request->validate(['email' => 'required|email']);
