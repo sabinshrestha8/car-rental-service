@@ -18,6 +18,7 @@ return new class extends Migration {
                 ->constrained()
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->bigInteger('customer_id');
             $table->string('customer');
             $table->longText('review');
             $table->integer('star');

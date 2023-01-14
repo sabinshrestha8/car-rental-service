@@ -16,9 +16,12 @@ class ReviewController extends Controller
         $validatedStoreReview = $request->validated();
 
         $validatedStoreReviewMod = [
+            'customer_id' => auth()->user()->id,
             'customer' => auth()->user()->name,
             ...$validatedStoreReview,
         ];
+
+        // dd($validatedStoreReviewMod);
 
         $review = new Review($validatedStoreReviewMod);
 
