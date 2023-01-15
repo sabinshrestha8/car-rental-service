@@ -13,39 +13,33 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\{StoreUserRequest, CheckUserRequest, ResetPasswordRequest};
 
 class AuthController extends Controller
 {
     /**
      * Register new user
      */
-    public function signup(Request $request)
+    public function signup(StoreUserRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-        ]);
+        $validatedData = $request->validated();
 
         $createdUser = User::create($validatedData);
 
         if ($createdUser) {
             $createdUser->roles()->attach(Role::where('name', 'User')->first());
-            return response()->json(null, Response::HTTP_CREATED);
+            return response()->json('User Created Sucessfully', Response::HTTP_CREATED);
         }
 
-        return response()->json(null, Response::HTTP_NOT_FOUND);
+        return response()->json('Could not create user', Response::HTTP_BAD_REQUEST);
     }
 
     /**
      * Generate sanctum token on successful login
      */
-    public function login(Request $request)
+    public function login(CheckUserRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $request->validated();
 
         $user = User::where('email', $request->email)->first();
 
@@ -115,13 +109,9 @@ class AuthController extends Controller
         }
     }
 
-    public function resetPassword(Request $request)
+    public function resetPassword(ResetPasswordRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $request->validated();
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
