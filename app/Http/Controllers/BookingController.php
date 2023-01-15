@@ -58,6 +58,20 @@ class BookingController extends Controller
 
     public function showBookings()
     {
+        if(auth()->user()->roles[0]->name === 'Admin') {
+            $bookings = Booking::latest()->get();
+
+            if (empty($bookings)) {
+                return response([
+                    'message' => 'No bookings yet'
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            return response([
+                'bookings' => BookingResource::collection($bookings)
+            ]);
+        }
+
         if (empty(auth()->user()->booking)) {
             return response([
                 'message' => 'No bookings yet'
