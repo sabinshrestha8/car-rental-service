@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateBookCarRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\Car;
+use App\Models\User;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -63,14 +64,8 @@ class BookingController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $bookings = auth()->user()->booking->where('id', auth()->user()->id)->get();
+        $bookings = auth()->user()->booking->latest()->get();
         // dd($bookings);
-
-        if (!empty($bookings)) {
-            return response([
-                'bookings' => BookingResource::collection($bookings)
-            ]);
-        }
 
         return response([
             'bookings' => BookingResource::collection($bookings)
