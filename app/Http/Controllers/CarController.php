@@ -91,9 +91,9 @@ class CarController extends Controller
         $search = $request->input('name');
 
         $searchedCars = Car::Where('name', 'LIKE', "%{$search}%")
-                ->orWhere('mileage', 'LIKE', "%{$search}%")
-                ->orWhere('horsepower', 'LIKE', "%{$search}%")
-                ->get();
+            ->orWhere('mileage', 'LIKE', "%{$search}%")
+            ->orWhere('horsepower', 'LIKE', "%{$search}%")
+            ->get();
 
         return response([
             'cars' => CarResource::collection($searchedCars)

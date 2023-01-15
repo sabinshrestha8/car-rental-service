@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -48,14 +49,14 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
         return response()->json([
-            'user' => $user,
+            'user' => UserResource::make($user),
             'access_token' => $user->createToken($request->email)->plainTextToken
         ]);
     }
@@ -76,10 +77,13 @@ class AuthController extends Controller
      */
     public function getAuthenticatedUser(Request $request)
     {
-        return $request->user();
+        return response([
+            'user' => UserResource::make($request->user())
+        ]);
     }
 
-    public function updateProfile(Request $request) {
+    public function updateProfile(Request $request)
+    {
         $validatedupdateProfile = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
@@ -90,7 +94,7 @@ class AuthController extends Controller
         $authenticatedUser->update($validatedupdateProfile);
 
         return response([
-            'user' => $authenticatedUser
+            'user' => UserResource::make($authenticatedUser)
         ]);
     }
 
