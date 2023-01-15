@@ -22,6 +22,7 @@ class CarResource extends JsonResource
             'horsepower' => $this->horsepower,
             'mileage' => $this->mileage,
             'price' => $this->price,
+            'rating' => $this->reviews->count() > 0 ? round($this->reviews->sum('star')/$this->reviews->count(),2) : 'No rating yet',
             'links' => [
                 'image' => $this->image ? $this->image : 'image not found'
             ]

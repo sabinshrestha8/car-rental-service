@@ -23,16 +23,16 @@ class CarController extends Controller
         $validatedStoreCar = $request->validated();
 
         $fileTemp = $request->file('image');
-        if ($fileTemp->isValid()) {
+        if (!empty($fileTemp)) {
             $fileExtension = $fileTemp->getClientOriginalExtension();
             $fileName = Str::random(4) . '.' . $fileExtension;
             $path = $fileTemp->storeAs(
                 'public/images',
                 $fileName
             );
-        }
 
-        $validatedStoreCar['image'] = url(Storage::url($path));
+            $validatedStoreCar['image'] = url(Storage::url($path));
+        }
 
         $createdCar = Car::create($validatedStoreCar);
 
