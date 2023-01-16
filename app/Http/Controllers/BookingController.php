@@ -78,7 +78,8 @@ class BookingController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $bookings = auth()->user()->booking->latest()->get();
+        $bookings = auth()->user()->booking()->latest()->get();
+
         // dd($bookings);
 
         return response([
