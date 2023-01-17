@@ -18,6 +18,7 @@ class BookingResource extends JsonResource
             'id' => $this->id,
             'booked_from' => $this->booked_from,
             'booked_to' => $this->booked_to,
+            'status' => $this->status == 0 ? 'inactive' : 'active',
             'total_price' => $this->total_price,
             'car' => new CarResource($this->car),
         ];

@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateBookCarRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\Car;
-use App\Models\User;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -58,7 +57,7 @@ class BookingController extends Controller
 
     public function showBookings()
     {
-        if(auth()->user()->roles[0]->name === 'Admin') {
+        if (auth()->user()->roles[0]->name === 'Admin') {
             $bookings = Booking::latest()->get();
 
             if (empty($bookings)) {
@@ -120,6 +119,33 @@ class BookingController extends Controller
         ];
 
         $booking->update($validatedUpdateBookingResult);
+
+        return response([
+            'booking' => new BookingResource($booking)
+        ]);
+    }
+
+    public function returnCar($id)
+    {
+        if (empty(auth()->user()->booking()->where('id', $id)->first())) {
+            return response([
+                'message' => 'Booking with id: ' . $id . ' couldn\'t be found'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $bookings = auth()->user()->booking()->latest()->get();
+
+        if (!$bookings) {
+            return response([
+                'message' => 'Booking with id: ' . $id . ' couldn\'t be found'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $booking = Booking::where('id', $id)->first();
+
+        $booking->update([
+            'status' => false
+        ]);
 
         return response([
             'booking' => new BookingResource($booking)

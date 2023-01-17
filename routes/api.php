@@ -45,6 +45,8 @@ Route::controller(BookingController::class)->prefix('bookings')->middleware('aut
     Route::put('/{id}', 'updateBooking');
 
     Route::get('/', 'showBookings');
+
+    Route::put('/{id}/update-status', 'returnCar');
 });
 
 Route::group(['prefix'=>'cars', 'middleware' => ['auth:sanctum']], function () {
