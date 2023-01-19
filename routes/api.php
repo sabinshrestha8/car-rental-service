@@ -6,6 +6,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ReviewController;
+use App\Http\Controllers\PaymentController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -52,3 +53,10 @@ Route::controller(BookingController::class)->prefix('bookings')->middleware('aut
 Route::group(['prefix'=>'cars', 'middleware' => ['auth:sanctum']], function () {
     Route::apiResource('/{car}/reviews', ReviewController::class);
 });
+
+Route::post('bookings/{id}/payment', [PaymentController::class, 'payForBooking'])->middleware('auth:sanctum');
+
+Route::get('bookings/{id}/payment', [PaymentController::class, 'retrieveUserPayment'])->middleware('auth:sanctum');
+
+Route::get('auth/user/payments', [PaymentController::class, 'retrieveUserPayments'])->middleware('auth:sanctum');
+
